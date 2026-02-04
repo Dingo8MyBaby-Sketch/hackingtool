@@ -151,7 +151,7 @@ class WindowsFileRecovery(HackingTool):
                   "[!] Windows 10/11 only\n" \
                   "[+] Free tool from Microsoft\n" \
                   "[+] Regular and extensive recovery modes\n" \
-                  "[+] Command: winfr source: destination: \\[/mode] \\[/switches]\n" \
+                  "[+] Command: winfr source-drive: destination-folder: /mode /switches\n" \
                   "[!] Note: Only available on Windows systems"
     PROJECT_URL = "https://www.microsoft.com/store/productId/9N26S50LN705"
 
