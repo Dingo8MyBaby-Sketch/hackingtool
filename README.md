@@ -124,6 +124,11 @@
 - [Bulk extractor](https://github.com/simsong/bulk_extractor)
 - [Disk Clone and ISO Image Acquire](https://guymager.sourceforge.io/)
 - [Toolsley](https://www.toolsley.com/)
+- [TestDisk](https://www.cgsecurity.org/wiki/TestDisk) - Recover deleted files and lost partitions (Windows, Linux, macOS)
+- [PhotoRec](https://www.cgsecurity.org/wiki/PhotoRec) - File recovery using signatures (Windows, Linux, macOS)
+- [Recuva](https://www.ccleaner.com/recuva) - Windows file recovery with GUI and CLI
+- [Windows File Recovery](https://www.microsoft.com/store/productId/9N26S50LN705) - Microsoft's official CLI recovery tool
+- [OneDrive File Recovery](https://support.microsoft.com/en-us/office/restore-deleted-files-or-folders-in-onedrive-949ada80-0026-4db3-a953-c99083e6a84f) - Restore deleted OneDrive files
 - [Volatility3](https://github.com/volatilityfoundation/volatility3/)
 ### Payload creation tools
 - [The FatRat](https://github.com/Screetsec/TheFatRat)

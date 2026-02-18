@@ -99,6 +99,81 @@ class Toolsley(HackingTool):
         super(Toolsley, self).__init__(installable=False, runnable=False)
 
 
+class TestDisk(HackingTool):
+    TITLE = "TestDisk"
+    DESCRIPTION = "TestDisk is a free, open-source tool for recovering lost partitions\n" \
+                  "and making non-booting disks bootable again.\n" \
+                  "[!] Works on Windows, Linux, macOS\n" \
+                  "[+] Recover deleted files from FAT, exFAT, NTFS, ext2\n" \
+                  "[+] Repair/recover lost partitions\n" \
+                  "[+] Command-line menu-driven interface"
+    INSTALL_COMMANDS = ["sudo apt-get install testdisk"]
+    RUN_COMMANDS = ["sudo testdisk"]
+    PROJECT_URL = "https://www.cgsecurity.org/wiki/TestDisk"
+
+    def __init__(self):
+        super(TestDisk, self).__init__()
+
+
+class PhotoRec(HackingTool):
+    TITLE = "PhotoRec"
+    DESCRIPTION = "PhotoRec is a companion to TestDisk, specializing in recovering\n" \
+                  "lost files from disks, memory cards, USB drives, and more.\n" \
+                  "[!] Works on Windows, Linux, macOS\n" \
+                  "[+] Recovers hundreds of file types\n" \
+                  "[+] Works on damaged or reformatted file systems\n" \
+                  "[+] Uses file signatures for recovery"
+    INSTALL_COMMANDS = ["sudo apt-get install testdisk"]
+    RUN_COMMANDS = ["sudo photorec"]
+    PROJECT_URL = "https://www.cgsecurity.org/wiki/PhotoRec"
+
+    def __init__(self):
+        super(PhotoRec, self).__init__()
+
+
+class Recuva(HackingTool):
+    TITLE = "Recuva"
+    DESCRIPTION = "Recuva is a Windows file recovery tool with GUI and CLI.\n" \
+                  "[!] Works on Windows only\n" \
+                  "[+] Fast standard scans with deep scan option\n" \
+                  "[+] Preserves filenames and folder structure\n" \
+                  "[+] Command-line interface for automation\n" \
+                  "[!] Note: Install via Wine on Linux or use Windows"
+    PROJECT_URL = "https://www.ccleaner.com/recuva"
+
+    def __init__(self):
+        super(Recuva, self).__init__(installable=False, runnable=False)
+
+
+class WindowsFileRecovery(HackingTool):
+    TITLE = "Windows File Recovery"
+    DESCRIPTION = "Microsoft's official command-line file recovery tool.\n" \
+                  "[!] Windows 10/11 only\n" \
+                  "[+] Free tool from Microsoft\n" \
+                  "[+] Regular and extensive recovery modes\n" \
+                  "[+] Command: winfr source-drive: destination-folder: /mode /switches\n" \
+                  "[!] Note: Only available on Windows systems"
+    PROJECT_URL = "https://www.microsoft.com/store/productId/9N26S50LN705"
+
+    def __init__(self):
+        super(WindowsFileRecovery, self).__init__(installable=False, runnable=False)
+
+
+class OneDriveRecovery(HackingTool):
+    TITLE = "OneDrive File Recovery"
+    DESCRIPTION = "Tools and methods for recovering deleted OneDrive files.\n" \
+                  "[!] Works with OneDrive personal and business accounts\n" \
+                  "[+] Web GUI: https://onedrive.live.com/ > Recycle Bin\n" \
+                  "[+] Retention: 30 days (personal) or 93 days (business)\n" \
+                  "[+] 'Restore your OneDrive' feature for mass recovery\n" \
+                  "[+] Microsoft Graph API for programmatic access\n" \
+                  "[!] Note: Use web interface or PowerShell for business accounts"
+    PROJECT_URL = "https://support.microsoft.com/en-us/office/restore-deleted-files-or-folders-in-onedrive-949ada80-0026-4db3-a953-c99083e6a84f"
+
+    def __init__(self):
+        super(OneDriveRecovery, self).__init__(installable=False, runnable=False)
+
+
 class ForensicTools(HackingToolsCollection):
     TITLE = "Forensic tools"
     TOOLS = [
@@ -106,7 +181,12 @@ class ForensicTools(HackingToolsCollection):
         Wireshark(),
         BulkExtractor(),
         Guymager(),
-        Toolsley()
+        Toolsley(),
+        TestDisk(),
+        PhotoRec(),
+        Recuva(),
+        WindowsFileRecovery(),
+        OneDriveRecovery()
     ]
 
     def _get_attr(self, obj, *names, default=""):
