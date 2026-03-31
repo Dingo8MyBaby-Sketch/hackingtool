@@ -216,10 +216,11 @@ class BlackPhish(HackingTool):
 
 
 class dnstwist(HackingTool):
-    Title = 'dnstwist'
-    Install_commands = ['sudo git clone https://github.com/elceef/dnstwist.git','cd dnstwist']
-    Run_commands = ['cd dnstwist;sudo python3 dnstwist.py']
-    project_url = 'https://github.com/elceef/dnstwist'
+    TITLE = 'dnstwist'
+    DESCRIPTION = "DNS fuzzing tool that finds lookalike domains used in phishing attacks and brand impersonation"
+    INSTALL_COMMANDS = ['sudo git clone https://github.com/elceef/dnstwist.git', 'cd dnstwist']
+    RUN_COMMANDS = ['cd dnstwist;sudo python3 dnstwist.py']
+    PROJECT_URL = 'https://github.com/elceef/dnstwist'
 
 
 class PhishingAttackTools(HackingToolsCollection):
