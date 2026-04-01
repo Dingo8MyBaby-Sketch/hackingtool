@@ -166,28 +166,28 @@ class XSSAttackTools(HackingToolsCollection):
         ))
 
     def show_options(self, parent=None):
-        console.print("\n")
-        self.show_info()
+        while True:
+            console.print("\n")
+            self.show_info()
 
-        table = Table(title="[bold cyan]Available Tools[/bold cyan]", show_lines=True)
-        table.add_column("Index", justify="center", style="bold yellow")
-        table.add_column("Tool Name", justify="left", style="bold green")
-        table.add_column("Description", justify="left", style="white")
+            table = Table(title="[bold cyan]Available Tools[/bold cyan]", show_lines=True)
+            table.add_column("Index", justify="center", style="bold yellow")
+            table.add_column("Tool Name", justify="left", style="bold green")
+            table.add_column("Description", justify="left", style="white")
 
-        for i, tool in enumerate(self.TOOLS):
-            table.add_row(str(i + 1), tool.TITLE, tool.DESCRIPTION or "—")
+            for i, tool in enumerate(self.TOOLS):
+                table.add_row(str(i + 1), tool.TITLE, tool.DESCRIPTION or "—")
 
-        table.add_row("[red]99[/red]", "[bold red]Exit[/bold red]", "Return to Main Menu")
+            table.add_row("[red]99[/red]", "[bold red]Exit[/bold red]", "Return to Main Menu")
 
-        console.print(table)
+            console.print(table)
 
-        try:
-            choice = Prompt.ask("[bold cyan]Select a tool to run[/bold cyan]")
-            choice = int(choice)
-            if 1 <= choice <= len(self.TOOLS):
-                self.TOOLS[choice - 1].show_options(parent=self)
-            elif choice == 99:
-                return 99
-        except Exception:
-            console.print("[bold red]Invalid choice. Try again.[/bold red]")
-        return self.show_options(parent=parent)
+            try:
+                choice = Prompt.ask("[bold cyan]Select a tool to run[/bold cyan]")
+                choice = int(choice)
+                if 1 <= choice <= len(self.TOOLS):
+                    self.TOOLS[choice - 1].show_options(parent=self)
+                elif choice == 99:
+                    return 99
+            except Exception:
+                console.print("[bold red]Invalid choice. Try again.[/bold red]")

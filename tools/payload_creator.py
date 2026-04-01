@@ -157,42 +157,41 @@ class PayloadCreatorTools(HackingToolsCollection):
         console.print(Panel(table, title="[purple]Available Tools[/purple]", border_style="purple"))
 
     def show_options(self):
-        console.print("\n")
-        console.print(Panel.fit(
-            "[bold purple]Payload Creator Collection[/bold purple]\n"
-            "Select a tool to run it or exit.",
-            border_style="purple"
-        ))
+        while True:
+            console.print("\n")
+            console.print(Panel.fit(
+                "[bold purple]Payload Creator Collection[/bold purple]\n"
+                "Select a tool to run it or exit.",
+                border_style="purple"
+            ))
 
-        table = Table(title="[bold cyan]Available Tools[/bold cyan]", show_lines=True, expand=True)
-        table.add_column("Index", justify="center", style="bold yellow")
-        table.add_column("Tool Name", justify="left", style="bold green")
-        table.add_column("Description", justify="left", style="white")
+            table = Table(title="[bold cyan]Available Tools[/bold cyan]", show_lines=True, expand=True)
+            table.add_column("Index", justify="center", style="bold yellow")
+            table.add_column("Tool Name", justify="left", style="bold green")
+            table.add_column("Description", justify="left", style="white")
 
-        for i, tool in enumerate(self.TOOLS):
-            desc = getattr(tool, "DESCRIPTION", "") or "—"
-            table.add_row(str(i + 1), tool.TITLE, desc.replace("\n", " "))
+            for i, tool in enumerate(self.TOOLS):
+                desc = getattr(tool, "DESCRIPTION", "") or "—"
+                table.add_row(str(i + 1), tool.TITLE, desc.replace("\n", " "))
 
-        table.add_row("[red]99[/red]", "[bold red]Exit[/bold red]", "Return to previous menu")
-        console.print(table)
+            table.add_row("[red]99[/red]", "[bold red]Exit[/bold red]", "Return to previous menu")
+            console.print(table)
 
-        try:
-            choice = Prompt.ask("[bold cyan]Select a tool to run[/bold cyan]", default="99")
-            choice = int(choice)
-            if 1 <= choice <= len(self.TOOLS):
-                selected = self.TOOLS[choice - 1]
-                if hasattr(selected, "run"):
-                    selected.run()
-                elif hasattr(selected, "show_actions"):
-                    selected.show_actions()
-                else:
-                    console.print("[bold yellow]Selected tool has no runnable interface.[/bold yellow]")
-            elif choice == 99:
-                return 99
-        except Exception:
-            console.print("[bold red]Invalid choice. Try again.[/bold red]")
-
-        return self.show_options()
+            try:
+                choice = Prompt.ask("[bold cyan]Select a tool to run[/bold cyan]", default="99")
+                choice = int(choice)
+                if 1 <= choice <= len(self.TOOLS):
+                    selected = self.TOOLS[choice - 1]
+                    if hasattr(selected, "run"):
+                        selected.run()
+                    elif hasattr(selected, "show_actions"):
+                        selected.show_actions()
+                    else:
+                        console.print("[bold yellow]Selected tool has no runnable interface.[/bold yellow]")
+                elif choice == 99:
+                    return 99
+            except Exception:
+                console.print("[bold red]Invalid choice. Try again.[/bold red]")
 
 
 if __name__ == "__main__":
