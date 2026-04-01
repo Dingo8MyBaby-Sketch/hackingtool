@@ -62,42 +62,42 @@ class HackingTool(object):
         console.print(Panel(desc, title=f"[bold purple]{self.TITLE}[/bold purple]", border_style="purple", box=box.DOUBLE))
 
     def show_options(self, parent=None):
-        clear_screen()
-        self.show_info()
+        while True:
+            clear_screen()
+            self.show_info()
 
-        table = Table(title="Options", box=box.SIMPLE_HEAVY)
-        table.add_column("No.", style="bold cyan", justify="center")
-        table.add_column("Action", style="bold yellow")
+            table = Table(title="Options", box=box.SIMPLE_HEAVY)
+            table.add_column("No.", style="bold cyan", justify="center")
+            table.add_column("Action", style="bold yellow")
 
-        for index, option in enumerate(self.OPTIONS):
-            table.add_row(str(index + 1), option[0])
+            for index, option in enumerate(self.OPTIONS):
+                table.add_row(str(index + 1), option[0])
 
-        if self.PROJECT_URL:
-            table.add_row("98", "Open Project Page")
-        table.add_row("99", f"Back to {parent.TITLE if parent else 'Exit'}")
+            if self.PROJECT_URL:
+                table.add_row("98", "Open Project Page")
+            table.add_row("99", f"Back to {parent.TITLE if parent else 'Exit'}")
 
-        console.print(table)
+            console.print(table)
 
-        option_index = input("\n[?] Select an option: ").strip()
-        try:
-            option_index = int(option_index)
-            if option_index - 1 in range(len(self.OPTIONS)):
-                ret_code = self.OPTIONS[option_index - 1][1]()
-                if ret_code != 99:
-                    input("\nPress [Enter] to continue...")
-            elif option_index == 98:
-                self.show_project_page()
-            elif option_index == 99:
-                if parent is None:
-                    sys.exit()
-                return 99
-        except (TypeError, ValueError):
-            console.print("[red]⚠ Please enter a valid option.[/red]")
-            input("\nPress [Enter] to continue...")
-        except Exception:
-            console.print_exception(show_locals=True)
-            input("\nPress [Enter] to continue...")
-        return self.show_options(parent=parent)
+            option_index = input("\n[?] Select an option: ").strip()
+            try:
+                option_index = int(option_index)
+                if 0 <= option_index - 1 < len(self.OPTIONS):
+                    ret_code = self.OPTIONS[option_index - 1][1]()
+                    if ret_code != 99:
+                        input("\nPress [Enter] to continue...")
+                elif option_index == 98:
+                    self.show_project_page()
+                elif option_index == 99:
+                    if parent is None:
+                        sys.exit()
+                    return 99
+            except (TypeError, ValueError):
+                console.print("[red]⚠ Please enter a valid option.[/red]")
+                input("\nPress [Enter] to continue...")
+            except Exception:
+                console.print_exception(show_locals=True)
+                input("\nPress [Enter] to continue...")
 
     def before_install(self): pass
 
@@ -154,39 +154,61 @@ class HackingToolsCollection(object):
     def __init__(self):
         pass
 
+    @staticmethod
+    def _get_attr(obj, *names, default=""):
+        """Return the first matching attribute from obj, or default."""
+        for n in names:
+            if hasattr(obj, n):
+                return getattr(obj, n)
+        return default
+
     def show_info(self):
         console.rule(f"[bold purple]{self.TITLE}[/bold purple]", style="purple")
         console.print(f"[italic cyan]{self.DESCRIPTION}[/italic cyan]\n")
 
+    def pretty_print(self):
+        table = Table(title=self.TITLE, show_lines=True, expand=True)
+        table.add_column("Title", style="purple", no_wrap=True)
+        table.add_column("Description", style="purple")
+        table.add_column("Project URL", style="purple", no_wrap=True)
+
+        for t in self.TOOLS:
+            title = self._get_attr(t, "TITLE", "Title", "title", default=t.__class__.__name__)
+            desc = self._get_attr(t, "DESCRIPTION", "Description", "description", default="")
+            url = self._get_attr(t, "PROJECT_URL", "PROJECT_URL", "PROJECT", "project_url", "projectUrl", default="")
+            table.add_row(str(title), str(desc).strip().replace("\n", " "), str(url))
+
+        console.print(Panel(table, title="[purple]Available Tools[/purple]", border_style="purple"))
+
     def show_options(self, parent=None):
-        clear_screen()
-        self.show_info()
+        while True:
+            clear_screen()
+            self.show_info()
 
-        table = Table(title="Available Tools", box=box.MINIMAL_DOUBLE_HEAD)
-        table.add_column("No.", justify="center", style="bold cyan")
-        table.add_column("Tool Name", style="bold yellow")
+            table = Table(title="Available Tools", box=box.MINIMAL_DOUBLE_HEAD)
+            table.add_column("No.", justify="center", style="bold cyan")
+            table.add_column("Tool Name", style="bold yellow")
 
-        for index, tool in enumerate(self.TOOLS):
-            table.add_row(str(index), tool.TITLE)
+            for index, tool in enumerate(self.TOOLS):
+                table.add_row(str(index), tool.TITLE)
 
-        table.add_row("99", f"Back to {parent.TITLE if parent else 'Exit'}")
-        console.print(table)
+            table.add_row("99", f"Back to {parent.TITLE if parent else 'Exit'}")
+            console.print(table)
 
-        tool_index = input("\n[?] Choose a tool: ").strip()
-        try:
-            tool_index = int(tool_index)
-            if tool_index in range(len(self.TOOLS)):
-                ret_code = self.TOOLS[tool_index].show_options(parent=self)
-                if ret_code != 99:
-                    input("\nPress [Enter] to continue...")
-            elif tool_index == 99:
-                if parent is None:
-                    sys.exit()
-                return 99
-        except (TypeError, ValueError):
-            console.print("[red]⚠ Please enter a valid option.[/red]")
-            input("\nPress [Enter] to continue...")
-        except Exception:
-            console.print_exception(show_locals=True)
-            input("\nPress [Enter] to continue...")
-        return self.show_options(parent=parent)
+            tool_index = input("\n[?] Choose a tool: ").strip()
+            try:
+                tool_index = int(tool_index)
+                if 0 <= tool_index < len(self.TOOLS):
+                    ret_code = self.TOOLS[tool_index].show_options(parent=self)
+                    if ret_code != 99:
+                        input("\nPress [Enter] to continue...")
+                elif tool_index == 99:
+                    if parent is None:
+                        sys.exit()
+                    return 99
+            except (TypeError, ValueError):
+                console.print("[red]⚠ Please enter a valid option.[/red]")
+                input("\nPress [Enter] to continue...")
+            except Exception:
+                console.print_exception(show_locals=True)
+                input("\nPress [Enter] to continue...")
