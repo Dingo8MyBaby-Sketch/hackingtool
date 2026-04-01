@@ -1,5 +1,6 @@
 from rich.console import Console
 from rich.panel import Panel
+from rich.prompt import Prompt
 from rich.table import Table
 from rich import box
 from rich.traceback import install
@@ -158,35 +159,57 @@ class HackingToolsCollection(object):
         console.rule(f"[bold purple]{self.TITLE}[/bold purple]", style="purple")
         console.print(f"[italic cyan]{self.DESCRIPTION}[/italic cyan]\n")
 
+    def pretty_print(self):
+        table = Table(title=self.TITLE, show_lines=True, expand=True)
+        table.add_column("Title", style="purple", no_wrap=True)
+        table.add_column("Description", style="purple")
+        table.add_column("Project URL", style="purple", no_wrap=True)
+        for t in self.TOOLS:
+            desc = getattr(t, "DESCRIPTION", "") or ""
+            url = getattr(t, "PROJECT_URL", "") or ""
+            table.add_row(
+                getattr(t, "TITLE", t.__class__.__name__),
+                desc.strip().replace("\n", " "),
+                url,
+            )
+        console.print(Panel(table, title="[purple]Available Tools[/purple]", border_style="purple"))
+
     def show_options(self, parent=None):
-        clear_screen()
-        self.show_info()
+        console.print("\n")
+        console.print(Panel.fit(
+            f"[bold magenta]{self.TITLE} Collection[/bold magenta]\n"
+            "Select a tool to view options or run it.",
+            border_style="purple"
+        ))
 
-        table = Table(title="Available Tools", box=box.MINIMAL_DOUBLE_HEAD)
-        table.add_column("No.", justify="center", style="bold cyan")
-        table.add_column("Tool Name", style="bold yellow")
+        table = Table(title="[bold cyan]Available Tools[/bold cyan]", show_lines=True, expand=True)
+        table.add_column("Index", justify="center", style="bold yellow")
+        table.add_column("Tool Name", justify="left", style="bold green")
+        table.add_column("Description", justify="left", style="white")
 
-        for index, tool in enumerate(self.TOOLS):
-            table.add_row(str(index), tool.TITLE)
+        for i, tool in enumerate(self.TOOLS):
+            title = getattr(tool, "TITLE", tool.__class__.__name__)
+            desc = getattr(tool, "DESCRIPTION", "") or "—"
+            table.add_row(str(i + 1), title, desc)
 
-        table.add_row("99", f"Back to {parent.TITLE if parent else 'Exit'}")
+        table.add_row("[red]99[/red]", "[bold red]Exit[/bold red]", "Return to previous menu")
         console.print(table)
 
-        tool_index = input("\n[?] Choose a tool: ").strip()
         try:
-            tool_index = int(tool_index)
-            if tool_index in range(len(self.TOOLS)):
-                ret_code = self.TOOLS[tool_index].show_options(parent=self)
-                if ret_code != 99:
-                    input("\nPress [Enter] to continue...")
-            elif tool_index == 99:
-                if parent is None:
-                    sys.exit()
+            choice = Prompt.ask("[bold cyan]Select a tool[/bold cyan]", default="99")
+            choice = int(choice)
+            if 1 <= choice <= len(self.TOOLS):
+                selected = self.TOOLS[choice - 1]
+                if hasattr(selected, "show_options"):
+                    selected.show_options(parent=self)
+                elif hasattr(selected, "run"):
+                    selected.run()
+                elif hasattr(selected, "show_info"):
+                    selected.show_info()
+                else:
+                    console.print("[bold yellow]Selected tool has no runnable interface.[/bold yellow]")
+            elif choice == 99:
                 return 99
-        except (TypeError, ValueError):
-            console.print("[red]⚠ Please enter a valid option.[/red]")
-            input("\nPress [Enter] to continue...")
         except Exception:
-            console.print_exception(show_locals=True)
-            input("\nPress [Enter] to continue...")
+            console.print("[bold red]Invalid choice. Try again.[/bold red]")
         return self.show_options(parent=parent)
